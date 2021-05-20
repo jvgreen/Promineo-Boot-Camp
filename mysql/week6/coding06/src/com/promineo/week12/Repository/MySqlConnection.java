@@ -1,4 +1,4 @@
-package com.promineo.week11.Dao;
+package com.promineo.week12.Repository;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class MySqlConnection {
     private Connection conn;
     private final String Username = "root";
-    private final String Password = "root";
+    private final String Password = "31Ack1ag00n";
 
     public Connection getConnection(String dbName) {
         try
