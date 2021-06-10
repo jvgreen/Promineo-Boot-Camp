@@ -1,7 +1,9 @@
 package com.promineotech.jeep.controller;
 
+import java.math.BigDecimal;
+import java.util.LinkedList;
 import java.util.List;
-
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,17 +14,18 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
-
+import org.springframework.test.jdbc.JdbcTestUtils;
 import com.promineotech.jeep.entity.Jeep;
 import com.promineotech.jeep.entity.JeepModel;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)                   
 @ActiveProfiles("test")
 @Sql(scripts = {
     "classpath:flyway/migrations/V1.0__Jeep_Schema.sql",
@@ -46,11 +49,41 @@ class FetchJeepTest {
     String uri = String.format("http://localhost/%d/jeeps?model=%s&trim=%s", serverPort, model, trim);
     
     System.out.println(uri);
-    
     // When: a connection is made to URI 
     ResponseEntity<List<Jeep>> response = restTemplate.exchange(uri, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
     
     // Then: a success (OK - 200) status code returned
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    
+    
+    
+    
+    // And: the actual list is the same as the expected list
+    List<Jeep> expected = buildExpected();  
+    System.out.println(expected);
+    assertThat(response.getBody()).isEqualTo(expected);
+    
+  }
+  
+  protected List<Jeep> buildExpected() {
+    List<Jeep> list = new LinkedList<>();
+    
+    list.add(Jeep.builder()
+        .modelId(JeepModel.WRANGLER)
+        .trimLevel("Sport")
+        .numDoors(2)
+        .wheelSize(17)
+        .basePrice(new BigDecimal("28475.00"))
+        .build());
+    
+    list.add(Jeep.builder()
+        .modelId(JeepModel.WRANGLER)
+        .trimLevel("Sport")
+        .numDoors(4)
+        .wheelSize(17)
+        .basePrice(new BigDecimal("31975.00"))
+        .build());
+    
+    return list;
   }
 }

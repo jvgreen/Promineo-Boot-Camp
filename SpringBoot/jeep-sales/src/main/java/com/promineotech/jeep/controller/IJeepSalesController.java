@@ -30,31 +30,33 @@ public interface IJeepSalesController {
       responses = {
           @ApiResponse(
                        responseCode = "200", 
-                       description = "A list of Jeeps is returned", 
-                       content = @Content(mediaType = "application/json", 
-                       schema = @Schema(implementation = Jeep.class))),
+                       description  = "A list of Jeeps is returned", 
+                       content      = @Content(mediaType = "application/json", 
+                       schema       = @Schema(implementation = Jeep.class))),
           @ApiResponse(
                        responseCode = "400",
-                       description = "The request parameters are invalid", 
-                       content = @Content(mediaType = "application/json")),
+                       description  = "The request parameters are invalid", 
+                       content      = @Content(mediaType = "application/json")),
           @ApiResponse(
                        responseCode = "404",
-                       description = "No Jeeps were found",
-                       content = @Content(mediaType = "application/json")),
+                       description  = "No Jeeps were found",
+                       content      = @Content(mediaType = "application/json")),
           @ApiResponse(
                        responseCode = "500", 
-                       description = "An unplanned error occurred",
-                       content = @Content(mediaType = "application/json"))
+                       description  = "An unplanned error occurred",
+                       content      = @Content(mediaType = "application/json"))
       },
       parameters = {
-          @Parameter(name = "model", 
-                     allowEmptyValue = false, 
-                     required = false, 
-                     description = "The model name (i.e. 'WRANGLER"),
-          @Parameter(name = "trim", 
-                     allowEmptyValue = false, 
-                      required = false,
-                      description = "The trim level (i.e. 'Sport'")
+          @Parameter(
+                     name             = "model", 
+                     allowEmptyValue  = false, 
+                     required         = false, 
+                     description      = "The model name (i.e. 'WRANGLER"),
+          @Parameter(
+                      name            = "trim", 
+                      allowEmptyValue = false, 
+                      required        = false,
+                      description     = "The trim level (i.e. 'Sport'")
       }
   )
   
