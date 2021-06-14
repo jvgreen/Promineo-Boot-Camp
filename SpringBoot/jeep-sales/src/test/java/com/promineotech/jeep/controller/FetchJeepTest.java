@@ -1,9 +1,9 @@
 package com.promineotech.jeep.controller;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,18 +14,17 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.jdbc.JdbcTestUtils;
+import com.promineotech.jeep.JeepSales;
 import com.promineotech.jeep.entity.Jeep;
 import com.promineotech.jeep.entity.JeepModel;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)                   
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = {JeepSales.class})                   
 @ActiveProfiles("test")
 @Sql(scripts = {
     "classpath:flyway/migrations/V1.0__Jeep_Schema.sql",
@@ -46,7 +45,7 @@ class FetchJeepTest {
     // Given: a valid model, trim and URI
     JeepModel model = JeepModel.WRANGLER;
     String trim = "Sport";
-    String uri = String.format("http://localhost/%d/jeeps?model=%s&trim=%s", serverPort, model, trim);
+    String uri = String.format("http://localhost:%d/jeeps?model=%s&trim=%s", serverPort, model, trim);
     
     System.out.println(uri);
     // When: a connection is made to URI 
@@ -55,27 +54,17 @@ class FetchJeepTest {
     // Then: a success (OK - 200) status code returned
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     
-    
-    
-    
     // And: the actual list is the same as the expected list
+    List<Jeep> actual = response.getBody();
     List<Jeep> expected = buildExpected();  
-    System.out.println(expected);
-    assertThat(response.getBody()).isEqualTo(expected);
-    
+        
+    assertThat(actual).isEqualTo(expected);
   }
   
   protected List<Jeep> buildExpected() {
     List<Jeep> list = new LinkedList<>();
     
-    list.add(Jeep.builder()
-        .modelId(JeepModel.WRANGLER)
-        .trimLevel("Sport")
-        .numDoors(2)
-        .wheelSize(17)
-        .basePrice(new BigDecimal("28475.00"))
-        .build());
-    
+    // @formatter:off
     list.add(Jeep.builder()
         .modelId(JeepModel.WRANGLER)
         .trimLevel("Sport")
@@ -84,6 +73,16 @@ class FetchJeepTest {
         .basePrice(new BigDecimal("31975.00"))
         .build());
     
+    list.add(Jeep.builder()
+        .modelId(JeepModel.WRANGLER)
+        .trimLevel("Sport")
+        .numDoors(2)
+        .wheelSize(17)
+        .basePrice(new BigDecimal("28475.00"))
+        .build());
+    // @formatter:on
+    
+    Collections.sort(list);
     return list;
   }
 }
