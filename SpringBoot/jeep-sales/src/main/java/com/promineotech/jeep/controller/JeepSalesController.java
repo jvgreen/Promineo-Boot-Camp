@@ -20,5 +20,4 @@ public class JeepSalesController implements IJeepSalesController {
     log.debug("model={}, trim={}", model, trim);
     return jeepSalesService.fetchJeeps(model, trim);
   }
-  
 }
