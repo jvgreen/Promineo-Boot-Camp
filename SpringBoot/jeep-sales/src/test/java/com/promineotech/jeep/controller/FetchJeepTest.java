@@ -34,7 +34,6 @@ import com.promineotech.service.JeepSalesService;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = {JeepSales.class})                   
-
 class FetchJeepTest {
   @Autowired
   public TestRestTemplate restTemplate;
@@ -150,8 +149,9 @@ class FetchJeepTest {
         arguments("Invalid", "Sport", "Model is enum value")
     );
   }
-  
+  /*
   @Nested
+  @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = {JeepSales.class})                   
   @ActiveProfiles("test")
   @Sql(scripts = {
       "classpath:flyway/migrations/V1.0__Jeep_Schema.sql",
@@ -183,5 +183,5 @@ class FetchJeepTest {
       assertErrorMessageValid(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
-  }
+  }*/
 }
